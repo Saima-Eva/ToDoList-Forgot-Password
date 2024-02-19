@@ -1,0 +1,125 @@
+{% include "navbar.html" %}
+{% block content %}
+
+<style>
+    h1 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .task-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .task-table th, .task-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .task-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .task-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .task-table a {
+        display: inline-block;
+        margin-right: 5px;
+        padding: 5px 10px;
+        text-decoration: none;
+        background-color: green;
+        color: #fff;
+        border-radius: 3px;
+        transition: background-color 0.3s;
+    }
+
+    .task-table a:hover {
+        background-color: darkgreen;
+    }
+
+    .btn-success {
+        background-color: green;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-success:hover {
+        background-color: darkgreen;
+    }
+</style>
+
+<br>
+<br>
+
+<h1>Your Completed Tasks</h1>
+
+<div class="search-box">
+    <form method="get" action="{% url 'searchTaskPage' %}">
+        <input type="text" name="search" placeholder="Search tasks">
+
+        <button type="submit">Search By Title</button>
+    </form>
+</div>
+<div>
+    <form method="get" action="{% url 'searchTaskPage' %}">
+        <label for="category-filter">Select Category:</label>
+        <select id="category-filter" name="category">
+            <option value="">All Categories</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+</div>
+<!-- Category filter form -->
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="success-message">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<table class="task-table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Priority</th>
+            <th>Category</th>
+            <th>Completed</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+            {% if task.completed %}
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.due_date }}</td>
+                    <td>{{ task.priority }}</td>
+                    <td>{{ task.category }}</td>
+                    <td>
+                        <button class="btn-success">Completed</button>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}
